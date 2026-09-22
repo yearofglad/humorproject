@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f3ed;
+  --foreground: #252920;
 }
 
 @theme inline {
@@ -12,15 +12,28 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+.page-shell { width: min(1180px, 100%); margin: 0 auto; padding: 28px 28px 24px; }
+.masthead { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid #cccfc2; font-size: 13px; font-weight: 600; }
+.masthead span:last-child { color: #646a5b; font-weight: 400; }
+.intro { padding: 68px 0 48px; max-width: 850px; }
+.eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 11px; color: #596643; font-weight: 650; }
+h1 { font-size: clamp(38px, 6vw, 70px); font-weight: 650; line-height: 1.08; letter-spacing: -.055em; margin: 20px 0; }
+h1 span { color: #677750; }
+.intro-copy { max-width: 490px; color: #62665c; line-height: 1.7; }
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.caption-card { overflow: hidden; border: 1px solid #d7d9ce; background: #fffdf9; border-radius: 16px; }
+.card-image { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: #e1e4d8; }
+.card-body { padding: 24px; }
+.captions { list-style: none; padding: 0; margin: 14px 0 0; }
+.captions li { font-size: 19px; line-height: 1.45; letter-spacing: -.025em; }
+.captions li + li { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e3e4dc; }
+.muted { color: #62665c; margin-top: 14px; }
+.notice { padding: 28px; border: 1px solid #d7d9ce; border-radius: 12px; background: #fffdf9; line-height: 1.6; }
+footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid #cccfc2; color: #62665c; font-size: 12px; }
+@media (max-width: 760px) { .gallery { grid-template-columns: 1fr; } .intro { padding-top: 44px; } .page-shell { padding: 22px 20px; } .masthead { font-size: 11px; } }
