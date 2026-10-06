@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Public, anonymous access only. RLS on the database allows reads, not writes.
-// Add a cookie-based @supabase/ssr client when user sign-in is introduced.
+// Authentication uses the separate cookie-based client in supabase/server.ts.
 export function createSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
