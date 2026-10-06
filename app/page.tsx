@@ -29,13 +29,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ t
   const voteMap = new Map(votes.data?.map(v => [v.caption_id, v.value]));
   const makeUrl = (nextPage: number, nextTopic = topic, nextSaved = saved) => `/?${new URLSearchParams({ topic: nextTopic, view: nextSaved ? "likes" : "new", page: String(nextPage) })}`;
   return <main className="page-shell">
-    <header className="masthead"><span>A campus-sized comedy break</span><span>Columbia → NYC → your group chat</span></header>
-    <section className="intro feed-intro"><div><p className="eyebrow">For the chronically online, between classes</p>
-      <h1>Same city.<br /><span>Different punchline.</span></h1>
-      <p className="intro-copy">Photo captions for dorm life, campus chaos, and weekends figuring out New York. Find a laugh. Make the next one.</p>
-      <Link className="button" href="/create">Make a caption →</Link></div>
-      <aside className="daily-prompt"><p className="eyebrow">Today’s inspiration</p><p>{dailyPrompt()}</p><Link href="/create" className="inline-link">Try it with your photo →</Link></aside>
-    </section>
+    <header className="gallery-heading"><h1>{saved ? "my likes" : <><span className="desktop-title">gallery of memes</span><span className="mobile-title">gallery</span></>}</h1><Link className="make-link" href="/create">MAKE MEMES</Link></header>
     <section aria-label="Caption gallery">
       <div className="feed-controls"><div className="filter-links"><Link aria-current={!saved ? "page" : undefined} href={makeUrl(1, "all", false)}>Fresh captions</Link><Link aria-current={saved ? "page" : undefined} href={makeUrl(1, "all", true)}>My likes</Link></div>
         {!saved && <div className="filter-links topics"><Link aria-current={topic === "all" ? "page" : undefined} href={makeUrl(1, "all")}>All</Link>{Object.entries(TOPICS).map(([key, label]) => <Link key={key} aria-current={topic === key ? "page" : undefined} href={makeUrl(1, key)}>{label}</Link>)}</div>}
@@ -46,6 +40,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ t
         <nav className="pagination" aria-label="Gallery pages">{page > 1 && <Link href={makeUrl(page - 1)}>← Previous</Link>}{(saved ? likedIds.length > 12 : captions.length > 12) && <Link href={makeUrl(page + 1)}>More captions →</Link>}</nav>
       </>}
     </section>
+    <aside className="daily-prompt"><p className="eyebrow">Today’s inspiration</p><p>{dailyPrompt()}</p><Link href="/create" className="inline-link">Try it with your photo →</Link></aside>
     <footer>AI writes the captions. You decide what lands. Photos stay paired with their punchlines.</footer>
   </main>;
 }
