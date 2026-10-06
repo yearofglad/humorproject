@@ -12,7 +12,7 @@ export async function CaptionCard({ caption, vote, signedIn }: { caption: FeedCa
       <Link href={`/captions/${caption.id}`} className="caption-text">{caption.content}</Link></div>
     {url ? <Image src={url} alt={caption.images.description} width={900} height={650} unoptimized className="card-image" /> : <p className="notice">Photo temporarily unavailable. Please refresh.</p>}
     <div className="card-body card-actions">
-      {caption.generation_id ? <VoteButtons captionId={caption.id} initialVote={vote} signedIn={signedIn} /> : <p className="starter-label">Human-written example</p>}
+      {caption.generation_id && <VoteButtons captionId={caption.id} initialVote={vote} signedIn={signedIn} />}
       <div className="card-share"><ShareButton id={caption.id} /></div>
     </div>
   </article>;

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { currentUser } from "@/lib/profile";
 import { createAuthClient } from "@/lib/supabase/server";
 import { CaptionCard } from "./components/caption-card";
-import { dailyPrompt, isTopic, TOPICS } from "@/lib/generation";
+import { isTopic, TOPICS } from "@/lib/generation";
 import type { FeedCaption } from "@/lib/feed";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ topic?: string; view?: string; page?: string }> }) {
@@ -40,7 +40,5 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ t
         <nav className="pagination" aria-label="Gallery pages">{page > 1 && <Link href={makeUrl(page - 1)}>← Previous</Link>}{(saved ? likedIds.length > 12 : captions.length > 12) && <Link href={makeUrl(page + 1)}>More captions →</Link>}</nav>
       </>}
     </section>
-    <aside className="daily-prompt"><p className="eyebrow">Today’s inspiration</p><p>{dailyPrompt()}</p><Link href="/create" className="inline-link">Try it with your photo →</Link></aside>
-    <footer>AI writes the captions. You decide what lands. Photos stay paired with their punchlines.</footer>
   </main>;
 }
