@@ -82,3 +82,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:900px) { .gallery { grid-template-columns:repeat(2,minmax(0,1fr)); } .brand { font-size:52px; } .button.small { width:180px; } .make-link { font-size:28px; } }
 @media(max-width:600px) { .page-shell { padding:24px 14px; } .site-nav { padding:88px 28px 16px; flex-direction:column; align-items:stretch; gap:34px; } .brand { font-size:56px; line-height:1.08; } .brand span { font-size:25px; margin-top:8px; } .nav-links { justify-content:center; } .button.small { width:295px; max-width:100%; font-size:40px; } .nav-links:has(.profile-icon) .button.small { width:230px; } .gallery-heading { padding:12px 14px 30px; gap:10px; } .gallery-heading h1 { font-size:56px; } .desktop-title { display:none; } .mobile-title { display:inline; } .make-link { font-size:20px; } .gallery { grid-template-columns:1fr; } .caption-card { padding:8px 16px 16px; } .caption-text { font-size:40px; } .share-link,.rate-link { font-size:42px; } .name-fields { grid-template-columns:1fr; } .notice { padding:20px; } .feed-controls { gap:10px; } .topics { font-size:12px; } .narrow { padding-inline:24px; } }
 @media(prefers-reduced-motion:no-preference) { a,button { transition:color .12s,background-color .12s; } }
+
+/* Figma sign-in: live page content underneath a tinted glass panel. */
+.sign-in-dialog { position:fixed; inset:0; width:100%; height:100dvh; max-width:none; max-height:none; margin:0; padding:clamp(16px,6.3vh,90px) clamp(14px,4vw,57px); border:0; background:transparent; color:var(--accent); overflow:auto; }
+.sign-in-dialog::backdrop { background:rgba(255,255,255,.06); }
+.sign-in-glass { position:relative; min-height:100%; display:flex; align-items:center; justify-content:center; padding:72px 24px; background:linear-gradient(180deg,rgba(26,20,141,.2),rgba(127,147,214,.2)); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.sign-in-content { width:100%; text-align:center; }
+.google-glass-button { display:inline-flex; flex-direction:column; align-items:center; color:var(--accent); font-family:var(--display); font-size:clamp(42px,6.7vw,96px); font-weight:700; letter-spacing:-.03em; line-height:1.12; text-decoration:underline; text-underline-offset:8px; cursor:pointer; max-width:100%; }
+.google-glass-button:disabled { opacity:.6; cursor:wait; }
+.google-word > span:nth-child(2),.google-word > span:nth-child(6) { color:red; }
+.google-word > span:nth-child(3) { color:#d3a01e; }
+.google-word > span:nth-child(5) { color:#067f4f; }
+.modal-close { position:absolute; top:18px; right:20px; width:48px; height:48px; font-size:42px; line-height:1; cursor:pointer; color:var(--accent); }
+.modal-error { margin:0 auto 24px; max-width:500px; color:#8c1717; background:rgba(255,255,255,.9); padding:12px; }
+@media(max-width:600px) { .sign-in-glass { padding:72px 12px; } .google-glass-button { font-size:clamp(36px,10.8vw,62px); } }

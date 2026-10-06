@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description: "Serious studies. Unserious captions. A little perspective for your next study break.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children, modal }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
@@ -30,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <Suspense fallback={<div className="page-shell">The Humor Project</div>}><Navigation /></Suspense>
         {children}
+        {modal}
       </body>
     </html>
   );

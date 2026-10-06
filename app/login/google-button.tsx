@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createBrowserAuthClient } from "@/lib/supabase/browser";
 
-export function GoogleButton() {
+export function GoogleButton({ glass = false }: { glass?: boolean }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -23,8 +23,8 @@ export function GoogleButton() {
   }
 
   return <>
-    <button className="button" onClick={signIn} disabled={pending}>
-      {pending ? "Opening Google…" : "Sign in with Google"}
+    <button className={glass ? "google-glass-button" : "button"} aria-label="Sign in with Google" onClick={signIn} disabled={pending}>
+      {pending ? "Opening Google…" : glass ? <><span>SIGN IN with</span><span className="google-word" aria-hidden="true"><span>G</span><span>O</span><span>O</span><span>G</span><span>L</span><span>E</span></span></> : "Sign in with Google"}
     </button>
     {error && <p role="alert">{error}</p>}
   </>;

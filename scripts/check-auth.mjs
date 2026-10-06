@@ -19,5 +19,5 @@ assert.equal(legacyPost.status, 405);
 console.log('Removed ID-token POST flow rejected');
 const login = await fetch(base + '/login');
 assert.equal(login.status, 200);
-assert.match(await login.text(), /Join the/);
+assert.match(await login.text(), /Sign in with Google/);
 console.log('Login page verified');
