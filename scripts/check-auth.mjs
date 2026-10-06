@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:3100';
-for (const path of ['/profile', '/members']) {
+for (const path of ['/profile', '/members', '/create']) {
   const response = await fetch(base + path, { redirect: 'manual' });
   assert.equal(response.status, 307);
   assert.equal(response.headers.get('location'), '/login');

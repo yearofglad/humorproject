@@ -2,7 +2,6 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createAuthClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 export type Profile = {
   id: string;
@@ -26,8 +25,8 @@ export async function requireUser() {
 
 export async function requireProfile() {
   const user = await requireUser();
-  const admin = createAdminClient();
-  const { data, error } = await admin.from("profiles")
+  const supabase = await createAuthClient();
+  const { data, error } = await supabase.from("profiles")
     .select("id, first_name, last_name, avatar_path").eq("id", user.id).single();
   if (error) throw new Error("Your profile could not be loaded. Please try again.");
   return { user, profile: data as Profile };

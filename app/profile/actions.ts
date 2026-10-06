@@ -2,7 +2,7 @@
 
 import sharp from "sharp";
 import { revalidatePath } from "next/cache";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAuthClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/profile";
 import { MAX_PHOTO_BYTES, validateNames } from "@/lib/profile-validation";
 
@@ -30,27 +30,27 @@ export async function saveProfile(_previous: ProfileState, form: FormData): Prom
     }
   }
 
-  const admin = createAdminClient();
-  const { data: existing, error: readError } = await admin.from("profiles")
+  const supabase = await createAuthClient();
+  const { data: existing, error: readError } = await supabase.from("profiles")
     .select("avatar_path").eq("id", user.id).single();
   if (readError) return { error: "We couldn’t load your profile. Please try again." };
   const oldPath: string | null = existing.avatar_path;
   let newPath: string | undefined;
   if (image) {
     newPath = `${user.id}/${crypto.randomUUID()}.webp`;
-    const { error } = await admin.storage.from("avatars").upload(newPath, image, { contentType: "image/webp", upsert: false });
+    const { error } = await supabase.storage.from("avatars").upload(newPath, image, { contentType: "image/webp", upsert: false });
     if (error) return { error: "We couldn’t upload your photo. Please try again." };
   }
   // The owner always comes from the verified session, never form fields.
-  const { data, error } = await admin.from("profiles")
+  const { data, error } = await supabase.from("profiles")
     .update({ ...names, ...(newPath ? { avatar_path: newPath } : {}), updated_at: new Date().toISOString() })
     .eq("id", user.id).select("id").single();
   if (error || !data) {
-    if (newPath) await admin.storage.from("avatars").remove([newPath]);
+    if (newPath) await supabase.storage.from("avatars").remove([newPath]);
     return { error: "We couldn’t save your profile. Please try again." };
   }
   if (newPath && oldPath?.startsWith(`${user.id}/`)) {
-    await admin.storage.from("avatars").remove([oldPath]);
+    await supabase.storage.from("avatars").remove([oldPath]);
   }
   revalidatePath("/profile");
   revalidatePath("/members");

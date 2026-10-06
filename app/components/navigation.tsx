@@ -8,8 +8,9 @@ export async function Navigation() {
     <Link className="brand" href="/">The Humor Project</Link>
     <div className="nav-links">
       <Link href="/">Gallery</Link>
+      <Link href="/create">Create</Link>
       {user ? <>
-        <Link href="/members">Members’ lounge</Link>
+        <Link href="/?view=likes">My likes</Link>
         <Link href="/profile">Profile</Link>
         <form action={signOut}><button className="text-button">Sign out</button></form>
       </> : <Link className="button small" href="/login">Sign in</Link>}

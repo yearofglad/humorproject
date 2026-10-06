@@ -22,4 +22,4 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-export const config = { matcher: ["/", "/login", "/profile", "/members"] };
+export const config = { matcher: ["/", "/login", "/profile", "/members", "/create", "/captions/:path*"] };

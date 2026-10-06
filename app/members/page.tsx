@@ -9,12 +9,12 @@ export default async function Members() {
     <section className="intro">
       <p className="eyebrow">Members’ lounge</p>
       <h1>Welcome back,<br /><span>{profile.first_name}.</span></h1>
-      <p className="intro-copy">You’re in. A little bonus material for your next study break.</p>
+      <p className="intro-copy">You’re in. Your next study break starts with a photo and a punchline.</p>
     </section>
     <article className="notice">
-      <p className="eyebrow">Today’s members-only observation</p>
-      <p className="lounge-joke">My study plan has three stages: open the textbook, admire the font, take a well-earned break.</p>
-      <Link className="button" href="/">Back to the gallery</Link>
+      <p className="eyebrow">Make something worth sending</p>
+      <p className="lounge-joke">Turn a campus moment into an AI caption, then let the gallery decide what lands.</p>
+      <Link className="button" href="/create">Create a caption</Link>
       <Link className="inline-link" href="/profile">Edit your profile</Link>
     </article>
   </main>;

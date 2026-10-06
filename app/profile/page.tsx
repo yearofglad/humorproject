@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { isComplete, requireProfile } from "@/lib/profile";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAuthClient } from "@/lib/supabase/server";
 import { ProfileForm } from "./profile-form";
 
 export default async function ProfilePage() {
   const { user, profile } = await requireProfile();
   let avatarUrl: string | undefined;
   if (profile.avatar_path?.startsWith(`${user.id}/`)) {
-    const { data } = await createAdminClient().storage.from("avatars").createSignedUrl(profile.avatar_path, 300);
+    const { data } = await (await createAuthClient()).storage.from("avatars").createSignedUrl(profile.avatar_path, 300);
     avatarUrl = data?.signedUrl;
   }
   return <main className="page-shell narrow">

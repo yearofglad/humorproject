@@ -64,3 +64,35 @@ h2 { font-size: 22px; font-weight: 600; }
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #788c57; outline-offset: 4px; }
 @media (max-width: 560px) { .site-nav { align-items: flex-start; flex-direction: column; gap: 14px; } .nav-links { gap: 14px; } .name-fields { grid-template-columns: 1fr; } }
 @media (max-width: 760px) { .gallery { grid-template-columns: 1fr; } .intro { padding-top: 44px; } .page-shell { padding: 22px 20px; } .masthead { font-size: 11px; } }
+
+/* Assignment 4: a browseable gallery with a short path from photo to punchline. */
+.feed-intro { max-width: none; display: grid; grid-template-columns: 1.7fr 1fr; align-items: center; gap: 56px; }
+.daily-prompt { background: #e8eddf; padding: 26px; border: 1px solid #c9d2bb; border-radius: 16px; line-height: 1.6; margin-bottom: 24px; }
+.daily-prompt > p:not(.eyebrow) { font-size: 21px; line-height: 1.4; margin-top: 12px; letter-spacing: -.02em; }
+.caption-text { display: block; font-size: 24px; font-weight: 600; line-height: 1.35; letter-spacing: -.025em; margin-top: 14px; }
+.caption-card .card-image { aspect-ratio: 4 / 3; object-fit: contain; background: #e8e7e0; }
+.feed-controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
+.filter-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-links a { padding: 9px 15px; border-radius: 999px; border: 1px solid #c7ccbd; font-size: 14px; }
+.filter-links a[aria-current=page] { color: #fff; background: #526440; border-color: #526440; }
+.vote-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.vote-buttons button { padding: 10px 14px; border: 1px solid #bbc4ae; border-radius: 999px; cursor: pointer; font-size: 14px; }
+.vote-buttons button[aria-pressed=true] { background: #526440; color: #fff; border-color: #526440; }
+.vote-buttons button:disabled { opacity: .55; cursor: wait; }
+.vote-status { font-size: 12px; color: #636b59; margin-top: 10px; min-height: 36px; }
+.card-share { border-top: 1px solid #e3e4dc; margin-top: 12px; padding-top: 14px; font-size: 13px; }
+.share-status { display: block; margin-top: 4px; color: #526440; }
+.profile-form select, .profile-form textarea { min-width: 0; width: 100%; border: 1px solid #b6bcae; background: white; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 400; }
+.profile-form textarea { resize: vertical; }
+.upload-preview { width: 100%; max-height: 300px; object-fit: contain; background: #e8e7e0; border-radius: 12px; }
+.history { margin-top: 40px; }
+.history-item { border-bottom: 1px solid #d7d9ce; padding: 20px 0; }
+.history-item details { margin-top: 12px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.history-item details p { margin-top: 10px; }
+.history-item summary { cursor: pointer; color: #526440; }
+.pagination { display: flex; justify-content: space-between; gap: 24px; margin-top: 30px; }
+.pagination a { text-decoration: underline; text-underline-offset: 4px; }
+.single-caption { margin-top: 24px; }
+select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #788c57; outline-offset: 4px; }
+@media (max-width: 900px) { .feed-intro { gap: 28px; } .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .feed-intro { grid-template-columns: 1fr; } .gallery { grid-template-columns: 1fr; } .caption-text { font-size: 22px; } .daily-prompt { margin-bottom: 0; } }
