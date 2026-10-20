@@ -45,11 +45,28 @@ test('full migration chain enforces ownership, safe publication, votes, Storage 
     await db.exec("update public.profiles set first_name='Test', last_name='Person'");
     const tables = await q("select relname, relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and relkind='r'");
     assert.ok(tables.rows.every(t => t.relrowsecurity), 'Every app table has RLS');
-    const sample = (await q('select id from public.captions limit 1')).rows[0].id;
+    const sample = (await q('select id from public.captions where generation_id is null and editorial_generation_id is null limit 1')).rows[0].id;
+    const editorial = (await q("select id from public.captions where editorial_generation_id is not null and topic='city' order by id limit 1")).rows[0].id;
+    const catalog = await q('select topic, count(*)::int as count from public.editorial_generations group by topic order by topic');
+    assert.deepEqual(catalog.rows, [{topic:'campus',count:3},{topic:'city',count:6},{topic:'dorm',count:3}]);
+    assert.equal((await q("select count(*)::int as n from public.editorial_generations where prompt <> '' and model like 'GPT-6%'")).rows[0].n,12);
     await as('anon');
     assert.ok((await q('select * from public.captions')).rows.length > 0, 'public gallery readable');
     for (const table of ['profiles', 'generations', 'caption_votes']) await assert.rejects(q(`select * from public.${table}`), /permission denied/);
+    await assert.rejects(q('select * from public.caption_rankings'), /permission denied/);
+    assert.equal((await q('select * from public.editorial_generations')).rows.length,12,'Published editorial prompts are visible without sign-in');
     await assert.rejects(q('insert into public.caption_votes(caption_id,user_id,value) values($1,$2,1)',[sample,userA]), /permission denied/);
+    await as('authenticated', userA);
+    await assert.rejects(q('select * from public.caption_rankings'), /permission denied/);
+    await assert.rejects(q("insert into public.editorial_generations(image_id,topic,model,prompt) select image_id,'city','fake','fake' from public.editorial_generations limit 1"), /permission denied/);
+    await q('insert into public.caption_votes(caption_id,user_id,value) values($1,$2,1)',[editorial,userA]);
+    await as('service_role');
+    assert.equal(Number((await q('select funny_count from public.caption_rankings where id=$1',[editorial])).rows[0].funny_count),1);
+    assert.equal((await q('select id from public.caption_rankings order by funny_count desc, created_at desc, id limit 1')).rows[0].id,editorial,'A vote changes the top caption');
+    await as('authenticated', userA);
+    await q('update public.caption_votes set value=-1 where caption_id=$1',[editorial]);
+    await as('service_role');
+    assert.equal(Number((await q('select funny_count from public.caption_rankings where id=$1',[editorial])).rows[0].funny_count),0,'Changing Funny to Not for me removes the like');
     await as('authenticated', userA);
     assert.equal((await q('select id from public.profiles')).rows.length, 1);
     assert.equal((await q('update public.profiles set first_name=$1 where id=$2 returning id',['Intruder',userB])).rows.length,0);
@@ -97,6 +114,8 @@ test('full migration chain enforces ownership, safe publication, votes, Storage 
     await assert.rejects(q('insert into public.caption_votes(caption_id,user_id,value) values($1,$2,1)',[caption,userA]), /row-level security/);
     await q('insert into public.caption_votes(caption_id,user_id,value) values($1,$2,1)',[caption,userB]);
     await as('service_role');
+    assert.equal(Number((await q('select funny_count from public.caption_rankings where id=$1',[caption])).rows[0].funny_count),1,'Counts include other voters while their votes stay private');
+    assert.equal((await q('select id from public.caption_rankings where id=$1',[sample])).rows.length,0,'Human examples never rank as AI captions');
     for (let i=0;i<4;i++) {
       const id=(await reserve()).rows[0].id;
       await q("update public.generations set status='failed' where id=$1",[id]);

@@ -24,7 +24,7 @@ export default async function CreatePage() {
       {error ? <p className="muted">Generation history isn’t available yet.</p> : !history?.length ? <p className="muted">Your first caption starts here.</p> : history.map(item => <article key={item.id} className="history-item">
         <div><strong>{TOPICS[item.topic as Topic]}</strong><span className="muted"> · {item.status === "complete" ? "Published" : item.status === "failed" ? "Couldn’t finish" : "Processing / awaiting completion"}</span></div>
         {item.captions?.[0]?.id && <Link className="inline-link" href={`/captions/${item.captions[0].id}`}>View caption →</Link>}
-        <details><summary>Generation details</summary><p>Model: {item.model}</p><p>{item.description_prompt}</p><p>{item.caption_prompt || "Caption step not reached."}</p><p>{item.system_prompt}</p></details>
+        <details><summary>Saved AI prompts & model</summary><p><strong>Model:</strong> {item.model}</p><p><strong>Photo description prompt:</strong> {item.description_prompt}</p><p><strong>Caption prompt:</strong> {item.caption_prompt || "Caption step not reached."}</p><p><strong>System prompt:</strong> {item.system_prompt}</p></details>
       </article>)}
     </section>
   </main>;
