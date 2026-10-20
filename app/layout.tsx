@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Geist_Mono } from "next/font/google";
-import "@fontsource/redaction-70/700.css";
+import "@fontsource/redaction-35/700.css";
 import "./globals.css";
 import { Suspense } from "react";
 import { Navigation } from "./components/navigation";
