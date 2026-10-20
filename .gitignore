@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Supabase CLI cache
 /supabase/.temp/
+
+# Independent Week 6 repository
+/admin-app/

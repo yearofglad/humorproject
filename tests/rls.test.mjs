@@ -123,5 +123,29 @@ test('full migration chain enforces ownership, safe publication, votes, Storage 
       await q("update public.generations set status='failed' where id=$1",[id]);
     }
     await assert.rejects(reserve(), /USER_LIMIT/);
+    await as('authenticated',userA);
+    assert.equal((await q('select is_superadmin from public.profiles')).rows[0].is_superadmin,false);
+    await assert.rejects(q('update public.profiles set is_superadmin=true where id=$1',[userA]),/permission denied/);
+    await assert.rejects(q('select * from public.admin_media_events'),/permission denied/);
+    await assert.rejects(q("select public.admin_manage_caption($1,'delete',$2::jsonb)",[userA,JSON.stringify({id:editorial})]),/permission denied/);
+    await as('service_role');
+    await assert.rejects(q("select public.admin_manage_caption($1,'delete',$2::jsonb)",[userA,JSON.stringify({id:editorial})]),/ADMIN_REQUIRED/);
+    await q('update public.profiles set is_superadmin=true where id=$1',[userA]);
+    const image=(await q('select image_id from public.captions where id=$1',[editorial])).rows[0].image_id;
+    const payload={image_id:image,content:'Temporary AI caption',topic:'city',model:'Test model',prompt:'Test prompt',is_listed:false};
+    const manage=(actor,action,data)=>q('select public.admin_manage_caption($1,$2,$3::jsonb) as id',[actor,action,JSON.stringify(data)]);
+    await assert.rejects(manage(userA,'create',{...payload,prompt:''}),/PROVENANCE_REQUIRED/);
+    const made=(await manage(userA,'create',payload)).rows[0].id;
+    assert.equal((await q('select is_listed from public.captions where id=$1',[made])).rows[0].is_listed,false);
+    await manage(userA,'update',{id:made,content:'Updated AI caption',topic:'dorm',is_listed:true});
+    assert.equal((await q('select content from public.captions where id=$1',[made])).rows[0].content,'Updated AI caption');
+    await assert.rejects(manage(userA,'delete',{id:sample}),/AI_CAPTION_NOT_FOUND/);
+    await q('update public.profiles set is_superadmin=false where id=$1',[userA]);
+    await assert.rejects(manage(userA,'delete',{id:made}),/ADMIN_REQUIRED/);
+    await q('update public.profiles set is_superadmin=true where id=$1',[userA]);
+    await manage(userA,'delete',{id:made});
+    assert.equal((await q('select id from public.captions where id=$1',[made])).rows.length,0);
+    assert.equal((await q('select * from public.admin_media_events where caption_id=$1',[made])).rows.length,3);
+
   } finally { await db.close(); }
 });
