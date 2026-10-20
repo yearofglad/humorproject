@@ -6,7 +6,7 @@ import { signOut } from "@/app/auth/actions";
 export async function Navigation() {
   const user = await currentUser();
   return <nav className="site-nav page-shell" aria-label="Main navigation">
-    <Link className="brand" href="/">The Humor Project<span>Serious studies. Unserious captions.</span></Link>
+    <Link className="brand" href="/">The Humor Project</Link>
     <div className="nav-links">
       {user ? <>
         <Link href="/profile" aria-label="Your profile"><Image src="/design/profile.png" alt="" width={70} height={70} className="profile-icon" /></Link>

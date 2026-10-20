@@ -12,9 +12,8 @@ export default async function ProfilePage() {
   }
   return <main className="page-shell narrow">
     <section className="intro">
-      <p className="eyebrow">A face behind the punchline</p>
-      <h1>Your <span>profile.</span></h1>
-      <p className="intro-copy">{isComplete(profile) ? "Make yourself at home. Update your name or add a fresh photo." : "Before you join the lounge, tell us your first and last name."}</p>
+      <h1>Your profile</h1>
+      {!isComplete(profile) && <p className="intro-copy">Add your first and last name to continue.</p>}
     </section>
     <section className="notice">
       <div className="profile-heading">

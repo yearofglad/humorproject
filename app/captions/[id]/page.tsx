@@ -28,19 +28,19 @@ export default async function CaptionPage({ params }: { params: Promise<{ id: st
     {(caption.generation_id || caption.editorial_generation_id) && <section className="prompt-panel" id="prompt" aria-labelledby="prompt-heading">
       <h2 id="prompt-heading">Behind the caption</h2>
       {editorial?.error || generation?.error ? <p role="alert">The saved prompt is temporarily unavailable. Please refresh.</p> : editorial?.data ? <>
-        <p>AI-written for this gallery in a Codex editorial session, paired with an original pixel illustration.</p>
+        <p>AI caption · {caption.images.url.startsWith("/photos/") ? "Real photograph" : "Illustration"}</p>
         <dl><div><dt>Model</dt><dd>{editorial.data.model}</dd></div></dl>
         <details open><summary>Saved AI prompt</summary><dl><div><dt>Editorial generation brief</dt><dd>{editorial.data.prompt}</dd></div></dl></details>
       </> : generation?.data ? <>
-        <p>Your exact prompts are saved with this generation. Only you can read your uploaded-photo prompts and situation.</p>
+        <p>Your saved prompts are private.</p>
         <dl><div><dt>Model</dt><dd>{generation.data.model}</dd></div></dl>
         <details open><summary>Saved AI prompts</summary><dl>
           <div><dt>Caption prompt</dt><dd>{generation.data.caption_prompt}</dd></div>
           <div><dt>Photo description prompt</dt><dd>{generation.data.description_prompt}</dd></div>
           <div><dt>System prompt</dt><dd>{generation.data.system_prompt}</dd></div>
         </dl></details>
-      </> : <p>This caption was generated from an uploaded photo. Its exact prompts are saved privately for its creator under <Link className="text-button" href="/create">Create → Your recent attempts</Link>. {user ? "Sign in with the account that created it to inspect them here." : <Link className="text-button" href="/login">Sign in to view your own saved prompts.</Link>}</p>}
+      </> : <p>Prompts are private to the creator. <Link className="text-button" href={user ? "/create" : "/login"}>View your prompts →</Link></p>}
     </section>}
-    <Link className="button" href="/create">Make one with your photo →</Link>
+    <Link className="button" href="/create">Create a caption →</Link>
   </main>;
 }

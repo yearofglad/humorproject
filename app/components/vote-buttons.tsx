@@ -26,7 +26,7 @@ export function VoteButtons({ captionId, initialVote, signedIn, likes }: { capti
     <button disabled={pending} aria-pressed={vote === -1} onClick={() => rate(-1)}>Not for me</button>
   </div>
     <p className="like-count">{countLabel}</p>
-    <p className="vote-status" role="status">{pending ? "Saving…" : vote === 1 ? "Saved to My likes. You can change your vote." : vote === -1 ? "Rating saved. You can change your vote." : "Help the best captions rise."}</p>
+    <p className="vote-status" role="status">{pending ? "Saving…" : error ? "Not saved" : ""}</p>
     {error && <p className="form-error" role="alert">{error}</p>}
   </div>;
 }
