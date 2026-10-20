@@ -139,6 +139,7 @@ h2 { font-size:28px; }
 .brand-face img { width:clamp(36px,4.8vw,64px); height:auto; object-fit:contain; }
 .site-nav { padding:36px 40px 20px; }
 .gallery-heading { padding:24px 0 28px; }
+.gallery-heading h1 { font-size:clamp(32px,3.9vw,52px); }
 .button { font-size:17px; padding:12px 20px; }
 .button.small { width:auto; min-height:48px; font-size:20px; padding:10px 24px; }
 .make-link { font-size:22px; }
@@ -151,7 +152,7 @@ h2 { font-size:28px; }
 @media(max-width:600px) {
   .site-nav { padding:24px 14px 12px; }
   .brand { font-size:40px; }
-  .gallery-heading h1 { font-size:36px; }
+  .gallery-heading h1 { font-size:32px; }
   .make-link { font-size:15px; }
   .button.small,.nav-links:has(.profile-icon) .button.small { font-size:17px; padding:10px 18px; }
   .caption-card { padding:18px; }
