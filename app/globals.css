@@ -110,6 +110,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .vote-status { font-size:13px; max-width:240px; line-height:1.5; }
 .like-count { margin-top:10px; font-size:14px; font-weight:600; }
 .prompt-link { display:inline-block; color:var(--accent); text-decoration:underline; text-underline-offset:3px; font-size:13px; line-height:1.6; margin-top:18px; padding-block:4px; }
+.photo-credit { color:var(--muted); font-size:11px; line-height:1.5; margin-top:8px; }
+.photo-credit a { text-decoration:underline; text-underline-offset:2px; }
+.photo-credit span { display:block; }
 .prompt-panel { margin-top:32px; padding:24px; border:2px solid #000; line-height:1.7; scroll-margin-top:24px; }
 .prompt-panel h2 { margin-bottom:12px; }
 .prompt-panel summary { cursor:pointer; color:var(--accent); padding-block:8px; }

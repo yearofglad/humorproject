@@ -16,6 +16,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ t
   const user = await currentUser();
   const supabase = await createAuthClient();
   let query = supabase.from("captions").select(CAPTION_FIELDS);
+  if (!saved) query = query.eq("is_listed", true);
   if (topic !== "all") query = query.eq("topic", topic);
   let selectedIds: string[] = [];
   let selectionError = false;
@@ -24,7 +25,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ t
   let countsError = false;
   if (top) {
     try {
-      let ranking = createAdminClient().from("caption_rankings").select("id, funny_count");
+      let ranking = createAdminClient().from("caption_rankings").select("id, funny_count").eq("is_listed", true);
       if (topic !== "all") ranking = ranking.eq("topic", topic);
       const result = await ranking.order("funny_count", { ascending: false }).order("created_at", { ascending: false }).order("id").range((page - 1) * 12, page * 12);
       selectionError = Boolean(result.error);
