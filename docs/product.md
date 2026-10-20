@@ -43,7 +43,7 @@ The 12 earlier illustrated captions are unlisted from Fresh and Most liked, with
 
 Commit `af73b2a` is deployed publicly at https://humorproject-ako1u4kwx-hp-d80d.vercel.app. Google OAuth completed successfully in the real browser. A public-domain dorm photo generated a new Gemini caption (`f6ea6fea-21e0-43e4-90c9-f362888fcf32`); its exact prompts and model were visible to its creator. A Funny vote survived reload, appeared in My likes, and moved the caption to the top of Most liked. Anonymous route-protection checks passed. The security advisor reported only the existing leaked-password-protection warning.
 
-The follow-up real-photo collection and history-link fix are local, tested changes awaiting explicit publication approval. Automatic approval review rejected applying `20261020051027_replace_editorial_illustrations_with_photos.sql` because the user supplied an instructor screenshot without explicitly authorizing the production replacement. No part of that migration has been applied to the live database. The original Week 5 migration remains applied.
+The user explicitly approved publication of the real-photo draft on October 20, 2026. Migration `20261020051027_replace_editorial_illustrations_with_photos.sql` is applied to the live database. All 12 illustrated captions retain their original content, shared permalinks, and votes; they are unlisted from Fresh and Most liked. The 12 new real-photo captions have independent IDs and saved generation briefs.
 
 ## Typography and copy follow-up
 
@@ -51,4 +51,4 @@ The user requested Poppins and removal of promotional filler, alongside screensh
 
 The Create heading is “Create a caption” with no forced line break. Daily inspiration uses smaller Poppins text. Gallery cards stretch to equal row heights with consistent image frames. Actual component previews verified Poppins loaded, all three desktop cards measured 639 px high, and the 390 px mobile view had no horizontal overflow. The temporary preview route was removed after inspection.
 
-Typography, shorter copy, equal card heights, and the history-link fix are committed separately as `e9651a9`, without any photo collection or database changes. The real-photo replacement remains local and awaits the user's explicit approval.
+Typography, shorter copy, equal card heights, and the history-link fix are committed separately as `e9651a9`, without any photo collection or database changes. The approved real-photo collection is now included for publication, retaining the deployed Poppins and copy changes.
