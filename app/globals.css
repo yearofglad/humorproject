@@ -134,6 +134,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 h1 { font-size:clamp(36px,4.5vw,60px); }
 h2 { font-size:28px; }
 .brand { font-size:clamp(40px,5.2vw,72px); }
+.brand-lockup { display:flex; align-items:center; gap:16px; min-width:0; }
+.brand-face { display:flex; flex-shrink:0; }
+.brand-face img { width:clamp(36px,4.8vw,64px); height:auto; object-fit:contain; }
 .site-nav { padding:36px 40px 20px; }
 .gallery-heading { padding:24px 0 28px; }
 .button { font-size:17px; padding:12px 20px; }
