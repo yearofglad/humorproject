@@ -17,14 +17,14 @@ export const currentUser = cache(async () => {
   return error ? null : data.user;
 });
 
-export async function requireUser() {
+export async function requireUser(next = "/members") {
   const user = await currentUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?next=${encodeURIComponent(next)}`);
   return user;
 }
 
-export async function requireProfile() {
-  const user = await requireUser();
+export async function requireProfile(next = "/profile") {
+  const user = await requireUser(next);
   const supabase = await createAuthClient();
   const { data, error } = await supabase.from("profiles")
     .select("id, first_name, last_name, avatar_path").eq("id", user.id).single();

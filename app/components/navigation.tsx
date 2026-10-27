@@ -12,7 +12,7 @@ export async function Navigation() {
         <Image src={user ? "/design/profile.png" : "/design/person.png"} alt="" width={70} height={70} />
       </Link>
     </div>
-    <div className="nav-links">
+    <div className="nav-links"><Link className="nav-text" href="/">Browse</Link><Link className="nav-text" href="/create">Create</Link>
       {user ? <>
         <form action={signOut}><button className="button small outline">Sign out</button></form>
       </> : <Link className="button small" href="/login">Sign in</Link>}

@@ -5,8 +5,9 @@ import { createAuthClient } from "@/lib/supabase/server";
 import { CAPTION_FIELDS, captionLikes, type FeedCaption } from "@/lib/feed";
 import { CaptionCard } from "@/app/components/caption-card";
 
-export default async function CaptionPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CaptionPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{published?:string}> }) {
   const { id } = await params;
+  const {published}=await searchParams;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const supabase = await createAuthClient();
   const user = await currentUser();
@@ -23,6 +24,7 @@ export default async function CaptionPage({ params }: { params: Promise<{ id: st
   const generation = caption.generation_id && user ? await supabase.from("generations")
     .select("model, system_prompt, description_prompt, caption_prompt").eq("id", caption.generation_id).maybeSingle() : null;
   return <main className="page-shell narrow"><Link className="inline-link" href="/">← Back to the gallery</Link>
+    {published==="1"&&generation?.data&&<div className="publish-success" role="status"><h1>Your caption is published</h1><p>It’s now in the gallery and ready to share.</p></div>}
     {vote?.error && <p className="notice" role="alert">We couldn’t load your rating. Refresh before rating again.</p>}
     <div className="single-caption"><CaptionCard key={`${id}-${vote?.data?.value ?? 0}-${likes ?? "unknown"}`} caption={caption} signedIn={Boolean(user) && !vote?.error} vote={vote?.data?.value} likes={likes} /></div>
     {(caption.generation_id || caption.editorial_generation_id) && <section className="prompt-panel" id="prompt" aria-labelledby="prompt-heading">

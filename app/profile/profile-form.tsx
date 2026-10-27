@@ -16,7 +16,7 @@ export function ProfileForm({ firstName, lastName }: { firstName: string | null;
     </label>
     <p id="photo-help" className="muted">JPEG, PNG, or WebP, up to 2 MB. Your photo is stored privately and cropped to a square.</p>
     {state.error && <p className="form-error" role="alert">{state.error}</p>}
-    {state.success && <p className="form-success" role="status">{state.success} <Link className="inline-link" href="/members">Go to the lounge →</Link></p>}
+    {state.success && <p className="form-success" role="status">{state.success} <Link className="inline-link" href="/create">Create a caption →</Link></p>}
     <button className="button" disabled={pending}>{pending ? "Saving…" : "Save profile"}</button>
   </form>;
 }

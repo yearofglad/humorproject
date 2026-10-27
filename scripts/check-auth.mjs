@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:3100';
-for (const path of ['/profile', '/members', '/create', '/admin/models']) {
+for (const path of ['/profile', '/members', '/create', '/admin/models', '/drafts/00000000-0000-4000-8000-000000000000']) {
   const response = await fetch(base + path, { redirect: 'manual' });
   assert.equal(response.status, 307);
-  assert.equal(response.headers.get('location'), '/login');
+  assert.equal(new URL(response.headers.get('location'),base).pathname,'/login');
   console.log(path + ': signed-out redirect verified');
 }
 for (const path of ['/auth/callback', '/auth/callback?error=access_denied', '/auth/callback?next=https://example.com']) {

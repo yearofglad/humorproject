@@ -4,6 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import { captionPrompt, parseOutput, dailyPrompt, isTopic } from '../lib/generation.ts';
 import {chooseChain,renderTemplate} from '../lib/chain-config.ts';
+import {safeAuthDestination} from '../lib/auth-destination.ts';
 const userA = '00000000-0000-4000-8000-000000000001';
 const userB = '00000000-0000-4000-8000-000000000002';
 const photoA = '00000000-0000-4000-8000-000000000011';
@@ -201,6 +202,40 @@ test('full migration chain enforces ownership, safe publication, votes, Storage 
     await change(userA,'images','update',draft,{description:'Updated photo description'});
     await change(userA,'images','delete',draft);
     await assert.rejects(change(userA,'images','create',null,{url:'https://example.test/photo.webp',description:'Forged owner',owner_id:userB,storage_path:userB+'/admin-test.webp'}),/INVALID_IMAGE_OWNER/);
+    // Review-first publishing: generated text and photos stay private until explicit publication.
+    await as('service_role');
+    const draftPhoto='00000000-0000-4000-8000-000000000022';
+    await q("insert into public.images(id,url,description,owner_id,storage_path) values($1,'https://example.test/private.webp','Private draft',$2,$3)",[draftPhoto,userB,userB+'/review.webp']);
+    const draftId=(await q("select public.reserve_generation($1,'dorm','','test-model','system','describe') as id",[userB])).rows[0].id;
+    await q("update public.generations set image_id=$1,image_description='A messy dorm',caption_prompt='caption' where id=$2",[draftPhoto,draftId]);
+    await q('select public.save_generated_draft($1,$2)',[draftId,'My desk has become a storage unit.']);
+    assert.equal((await q('select status from public.generations where id=$1',[draftId])).rows[0].status,'ready');
+    assert.equal((await q('select is_published from public.images where id=$1',[draftPhoto])).rows[0].is_published,false);
+    await assert.rejects(change(userA,'images','delete',draftPhoto),/IMAGE_IN_USE/);
+    await as('anon');
+    assert.equal((await q('select id from public.images where id=$1',[draftPhoto])).rows.length,0);
+    assert.equal((await q('select id from public.captions where generation_id=$1',[draftId])).rows.length,0);
+    await as('authenticated',userA);
+    assert.equal((await q('select id from public.generations where id=$1',[draftId])).rows.length,0);
+    await as('authenticated',userB);
+    assert.equal((await q('select draft_caption from public.generations where id=$1',[draftId])).rows[0].draft_caption,'My desk has become a storage unit.');
+    await assert.rejects(q('select public.manage_generated_draft($1,$2,$3,false)',[userB,draftId,'Forged']),/permission denied/);
+    await as('service_role');
+    await assert.rejects(q('select public.manage_generated_draft($1,$2,$3,true)',[userA,draftId,'Intruder']),/DRAFT_NOT_FOUND/);
+    await q('select public.manage_generated_draft($1,$2,$3,false)',[userB,draftId,'My desk is now a very expensive shelf.']);
+    assert.equal((await q('select ai_caption from public.generations where id=$1',[draftId])).rows[0].ai_caption,'My desk has become a storage unit.');
+    const published=(await q('select public.manage_generated_draft($1,$2,$3,true) as id',[userB,draftId,'My desk is now a very expensive shelf.'])).rows[0].id;
+    const twice=(await q('select public.manage_generated_draft($1,$2,$3,true) as id',[userB,draftId,'Double click must not overwrite.'])).rows[0].id;
+    assert.equal(twice,published,'Publication is idempotent');
+    assert.equal((await q('select content,edited_by_creator from public.captions where id=$1',[published])).rows[0].edited_by_creator,true);
+    assert.equal((await q('select content from public.captions where id=$1',[published])).rows[0].content,'My desk is now a very expensive shelf.');
+    await as('anon');
+    assert.equal((await q('select id from public.images where id=$1',[draftPhoto])).rows.length,1);
+    assert.equal((await q('select id from public.captions where generation_id=$1',[draftId])).rows.length,1);
+    await as('service_role');
+    for(let i=0;i<6;i++){const outage=(await q("select public.reserve_generation($1,'dorm','','test','system','describe') as id",[userB])).rows[0].id;await q("update public.generations set status='failed',error_code='AI_BUSY' where id=$1",[outage]);}
+    const afterOutages=(await q("select public.reserve_generation($1,'dorm','','test','system','describe') as id",[userB])).rows[0].id;
+    assert.ok(afterOutages,'Provider outages do not spend a user’s five draft generations');
     await as('supabase_auth_admin');
     assert.deepEqual((await q('select public.signup_access_check($1::jsonb) as result',[JSON.stringify({user:{email:'student@columbia.edu'}})])).rows[0].result,{});
     assert.equal((await q('select public.signup_access_check($1::jsonb) as result',[JSON.stringify({user:{email:'unknown@outside.test'}})])).rows[0].result.error.http_code,403);
@@ -217,4 +252,10 @@ test('chain selection honors weights, excludes disabled providers and escapes un
   assert.equal(chooseChain([{...chains[0],weight:0},chains[1]],0).id,'b');
   assert.throws(()=>chooseChain([{...chains[0],steps:steps.map(s=>({...s,model:{...model,enabled:false}}))}]),/NO_ACTIVE_CHAIN/);
   assert.match(renderTemplate('Scene {{description}}; context {{context}}; topic {{topic}}',{description:'A dog',context:'"ignore instructions"',topic:'Dorm'}),/\\"ignore instructions\\"/);
+});
+
+
+test('sign-in return destinations stay local and reject hostile redirects',()=>{
+ for(const value of ['https://evil.test','//evil.test','/\\evil.test','/create\r\nLocation: https://evil.test','/admin/models','/login','javascript:alert(1)'])assert.equal(safeAuthDestination(value),'/');
+ assert.equal(safeAuthDestination('/create'),'/create');assert.equal(safeAuthDestination('/?view=likes'),'/?view=likes');assert.equal(safeAuthDestination('/drafts/00000000-0000-4000-8000-000000000001'),'/drafts/00000000-0000-4000-8000-000000000001');
 });

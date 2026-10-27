@@ -10,7 +10,7 @@ export function VoteButtons({ captionId, initialVote, signedIn, likes }: { capti
   const [pending, startTransition] = useTransition();
   const count = likes === undefined ? undefined : Math.max(0, likes + Number(vote === 1) - Number(initialVote === 1));
   const countLabel = count === undefined ? "Likes unavailable" : `${count} ${count === 1 ? "like" : "likes"}`;
-  if (!signedIn) return <div className="vote-area"><Link className="rate-link" href="/login" aria-label="Sign in to rate this caption">Sign in to rate</Link><p className="vote-status">{countLabel}</p></div>;
+  if (!signedIn) return <div className="vote-area"><Link className="rate-link" href={`/login?next=${encodeURIComponent(`/captions/${captionId}`)}`} aria-label="Sign in to rate this caption">Sign in to rate</Link><p className="vote-status">{countLabel}</p></div>;
   function rate(value: number) {
     setError(undefined);
     startTransition(async () => {
@@ -22,7 +22,7 @@ export function VoteButtons({ captionId, initialVote, signedIn, likes }: { capti
     });
   }
   return <div className="vote-area"><div className="vote-buttons" aria-label="Rate this caption">
-    <button disabled={pending} aria-pressed={vote === 1} onClick={() => rate(1)} aria-label="Funny — save to My likes"><Image src={vote === 1 ? "/design/heart-filled.png" : "/design/heart.png"} alt="" width={24} height={24} /><span>Funny</span></button>
+    <button disabled={pending} aria-pressed={vote === 1} onClick={() => rate(1)} aria-label="Funny — save to your favorites"><Image src={vote === 1 ? "/design/heart-filled.png" : "/design/heart.png"} alt="" width={24} height={24} /><span>Funny</span></button>
     <button disabled={pending} aria-pressed={vote === -1} onClick={() => rate(-1)}>Not for me</button>
   </div>
     <p className="like-count">{countLabel}</p>

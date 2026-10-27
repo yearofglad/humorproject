@@ -1,8 +1,8 @@
 import "server-only";
 import { createAuthClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-export type FeedCaption = { id: string; content: string; generation_id: string | null; editorial_generation_id: string | null; topic: string | null; created_at: string; images: { url: string; description: string; storage_path: string | null } };
-export const CAPTION_FIELDS = "id, content, generation_id, editorial_generation_id, topic, created_at, images!inner(url, description, storage_path)";
+export type FeedCaption = { id: string; content: string; edited_by_creator?: boolean; generation_id: string | null; editorial_generation_id: string | null; topic: string | null; created_at: string; images: { url: string; description: string; storage_path: string | null } };
+export const CAPTION_FIELDS = "id, content, edited_by_creator, generation_id, editorial_generation_id, topic, created_at, images!inner(url, description, storage_path)";
 
 // The service-only view returns aggregate counts, never voters or private prompts.
 // Read captions themselves with the visitor's client so publication RLS still applies.

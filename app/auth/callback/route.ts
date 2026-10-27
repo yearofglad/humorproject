@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { safeAuthDestination } from "@/lib/auth-destination";
 import { createAuthClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -8,9 +10,13 @@ export async function GET(request: NextRequest) {
     const supabase = await createAuthClient();
     // The verifier stored at sign-in binds this one-use code to this browser.
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) destination = "/members";
+    if (!error) {
+      const raw=(await cookies()).get("humor-auth-next")?.value;
+      try { destination=safeAuthDestination(raw?decodeURIComponent(raw):"/"); } catch { destination="/"; }
+    }
   }
-  // Fixed local destinations: never redirect to a user-supplied next URL.
+  (await cookies()).delete("humor-auth-next");
+  // Only allowlisted local destinations may be used after sign-in.
   return new NextResponse(null, {
     status: 303,
     headers: { Location: destination, "Cache-Control": "private, no-store" },
