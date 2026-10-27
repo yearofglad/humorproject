@@ -24,7 +24,7 @@ export function GenerationForm({ enabled }: { enabled: boolean }) {
     <button className="button" disabled={pending || !enabled}>{pending ? "Generating…" : "Generate & publish"}</button>
     <p className="muted">5 attempts per 24 hours · usually under a minute</p>
     {pending && <p role="status">Generating your caption. Keep this page open.</p>}
-    {state.error && <p role="alert" className="form-error">{state.error}</p>}
-    {state.captionId && <div className="form-success" role="status">Your caption is live. <Link className="inline-link" href={`/captions/${state.captionId}`}>See it and share →</Link></div>}
+    {!pending && state.error && <p role="alert" className="form-error">{state.error}</p>}
+    {!pending && state.captionId && <div className="form-success" role="status">Your caption is live. <Link className="inline-link" href={`/captions/${state.captionId}`}>See it and share →</Link></div>}
   </form>;
 }

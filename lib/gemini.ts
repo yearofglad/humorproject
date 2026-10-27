@@ -14,7 +14,7 @@ export async function generateText(prompt:string,field:"description"|"caption",s
   const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(step.model.api_model)}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},signal:AbortSignal.timeout(25000),cache:"no-store",body:JSON.stringify({systemInstruction:{parts:[{text:step.system_prompt}]},contents:[{role:"user",parts}],generationConfig:{maxOutputTokens:step.max_output_tokens,responseMimeType:"application/json",...(temperature!==null?{temperature}:{}),responseJsonSchema:{type:"object",properties:{[field]:{type:"string"}},required:[field]}}})});
   status=response.status;
   // Avoid retaining provider error bodies, which may contain infrastructure details.
-  if(!response.ok)throw new Error(status===429?"AI_BUSY":"AI_FAILED");
+  if(!response.ok)throw new Error(status===429||status>=500?"AI_BUSY":"AI_FAILED");
   const result=await response.json();const candidate=result.candidates?.[0];
   input=Number.isInteger(result.usageMetadata?.promptTokenCount)?result.usageMetadata.promptTokenCount:null;output=Number.isInteger(result.usageMetadata?.candidatesTokenCount)?result.usageMetadata.candidatesTokenCount:null;
   raw=candidate?.content?.parts?.filter((p:{thought?:boolean})=>!p.thought).map((p:{text?:string})=>p.text||"").join("")||"";
