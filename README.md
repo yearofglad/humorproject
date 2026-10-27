@@ -103,3 +103,7 @@ Each AI card links to its provenance. Editorial prompts and model labels are pub
 The Supabase CLI configuration is linked locally to `bwzqaqybzuveuxzslsbq`; project cache and keys remain ignored. The app still requires the same server-only Gemini key in its deployment settings to generate new user uploads.
 
 `supabase/migrations/20261020051027_replace_editorial_illustrations_with_photos.sql` was applied to the existing project on October 20, 2026, following explicit user publication approval. It follows the instructor's real-photo feedback. It adds a protected `is_listed` caption flag, retires illustrations from public discovery, and adds 12 new photo captions. Shared links and personal likes for older captions continue to work. Source and license metadata live in `lib/photo-credits.ts`; the resized WebP assets are in `public/photos/`. No remote hotlink is required to display them.
+
+## Week 7 integration
+
+Caption requests now load a weighted two-step chain, terms and grounding examples from the shared database managed by the separate `yearofglad/humorproject-admin` repository. Each new request stores a configuration snapshot and per-step provider logs, including rendered prompts, output text, timing, tokens, HTTP status and errors. Existing requests remain legacy, without invented telemetry. Google Gemini is the connected runtime adapter and its key remains server-only. The shared before-user-created Auth hook enforces the enabled signup domain/email catalog; existing accounts and superadmin grants are preserved.
