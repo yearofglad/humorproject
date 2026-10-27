@@ -32,11 +32,11 @@ export default async function CaptionPage({ params, searchParams }: { params: Pr
       {editorial?.error || generation?.error ? <p role="alert">The saved prompt is temporarily unavailable. Please refresh.</p> : editorial?.data ? <>
         <p>AI caption · {caption.images.url.startsWith("/photos/") ? "Real photograph" : "Illustration"}</p>
         <dl><div><dt>Model</dt><dd>{editorial.data.model}</dd></div></dl>
-        <details open><summary>Saved AI prompt</summary><dl><div><dt>Editorial generation brief</dt><dd>{editorial.data.prompt}</dd></div></dl></details>
+        <details><summary>Saved AI prompt</summary><dl><div><dt>Editorial generation brief</dt><dd>{editorial.data.prompt}</dd></div></dl></details>
       </> : generation?.data ? <>
         <p>Your saved prompts are private.</p>
         <dl><div><dt>Model</dt><dd>{generation.data.model}</dd></div></dl>
-        <details open><summary>Saved AI prompts</summary><dl>
+        <details><summary>Saved AI prompts</summary><dl>
           <div><dt>Caption prompt</dt><dd>{generation.data.caption_prompt}</dd></div>
           <div><dt>Photo description prompt</dt><dd>{generation.data.description_prompt}</dd></div>
           <div><dt>System prompt</dt><dd>{generation.data.system_prompt}</dd></div>
