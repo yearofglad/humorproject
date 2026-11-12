@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Independent Week 6 repository
 /admin-app/
+
+# Independent Week 9 repository
+/chain-app/

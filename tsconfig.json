@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    "admin-app"
+    "admin-app",
+    "chain-app"
   ]
 }
